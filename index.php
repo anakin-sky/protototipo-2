@@ -170,6 +170,9 @@ $conn->close();
         <div class="editar_usuario">
             <a href="nuevos_cambios/editar_usuario.php" style="text-decoration: underline;">Editar datos personales</a>
         </div>
+        
+        <h1>segunda prueba de github, veamos sis funciona bien</h1>
+
     </main>
 </body>
 </html>
