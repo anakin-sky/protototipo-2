@@ -1,0 +1,177 @@
+header {
+    background-color: rgb(14, 115, 203);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.encabezado {
+    background-color: rgb(14, 115, 203); 
+    padding: 10px 20px; 
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.cerrar_sesion {
+    float: right;
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px; 
+    text-decoration: none; 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url("../img/medico_img.jpg");
+}
+
+header {
+    background-color: rgb(14, 115, 203);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    background-color: #ccc;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: rgb(14, 115, 203);
+    color: white;
+}
+
+th.select {
+    width: 80px;
+}
+
+.centrar-checkbox {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.volver_mi{
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    color: rgb(255, 255, 255);
+    background-color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+
+.volver_mi:hover {
+    background-color: #7c000c;
+}
+
+.reincorporar-boton{
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    padding: 8px 15px;
+    background-color: rgb(14, 115, 203);
+    color: white;
+    border: 1px solid rgb(14, 115, 203);
+    display: inline-block;
+}
+
+.reincorporar-boton:hover {
+    background-color: rgb(14, 115, 203);
+}
+
+a{
+    background-color: rgb(36, 146, 19);
+}
+
+input[type="submit"] {
+    font-size: 15px;
+    display: inline-block;
+    padding: 9px 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    color: white;
+    background-color: rgb(14, 115, 203);
+}
+
+input[type="submit"]:hover {
+    background-color:rgb(14, 115, 203);
+    border-color: currentColor;
+}
+
+select#usuario {
+    padding: 8px;
+    font-size: 16px; 
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+
+select#usuario option {
+    padding: 8px;
+    font-size: 14px; 
+    border-radius: 4px;
+}
+
+select#usuario:hover,
+select#usuario:focus {
+    border-color: rgb(14, 115, 203); 
+    outline: none;
+}
+
+.eliminados-ver {
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    padding: 9px 25px;
+    background-color: #dc3545;
+    color: white;
+    border: 2px solid #dc3545;
+    margin-left: 10%;
+}
+
+.eliminados-ver:hover {
+    background-color: #a40010;
+}
+
+.edits {
+    text-align: center;
+}
+
+#qr-code {
+    max-width: 80%;
+    height: auto;
+}
+

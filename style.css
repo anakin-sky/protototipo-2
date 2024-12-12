@@ -1,0 +1,248 @@
+/** General Styles **/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-image: url('img/medico_img.jpg'); 
+    background-size: cover; 
+    background-position: center;
+    background-attachment: fixed;
+}
+
+header {
+    background-color: #009cde;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
+header h1 {
+    font-size: 32px;
+    margin: 0;
+}
+
+.cerrar_sesion, .boton-nuevo-medicamento, .boton-crear-receta, .mi-receta, .eliminados-ver {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #58a6ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px;
+    margin: 10px 5px;
+}
+
+.cerrar_sesion {
+    background-color: #ff5c5c;
+}
+
+
+.cerrar-sesion {
+    background-color: #ff5c5c;
+}
+
+.boton-nuevo-medicamento, .boton-crear-receta {
+    background-color: #037a1e;
+}
+
+.mi-receta {
+    background-color: #4db8ff;
+}
+
+.eliminados-ver {
+    background-color: #ff5c5c; 
+}
+
+.cerrar_sesion:hover, .boton-nuevo-medicamento:hover, .boton-crear-receta:hover, .mi-receta:hover, .eliminados-ver:hover {
+    background-color: #006a9c;
+    transform: translateY(-2px);
+}
+
+.cerrar_sesion {
+    float: right;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+th {
+    background-color: #009cde;
+    color: white;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #e6f7ff;
+}
+
+.edit-boton, .elim-boton {
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.edit-boton {
+    background-color: #58a6ff;
+    color: white;
+}
+
+.elim-boton {
+    background-color: #ff5c5c;
+    color: white;
+}
+
+.edit-boton:hover {
+    background-color: #007bff;
+}
+
+.elim-boton:hover {
+    background-color: #d60000;
+}
+
+main {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+.botones_edicion, .botones_edicion a {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.botones_edicion a {
+    margin: 0 15px;
+}
+
+a {
+    color: #009cde;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.tabla_estilo {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+.tabla_estilo th, .tabla_estilo td {
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+.boton-editar, .boton-eliminar {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    transition: transform 0.2s;
+}
+
+.boton-editar:hover, .boton-eliminar:hover {
+    transform: scale(1.1);
+}
+
+.edits {
+    text-align: center;
+}
+
+.edits a {
+    margin: 0 10px;
+}
+
+.centrar-checkbox {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mi-receta {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #037a1e;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+}
+
+.mi-receta:hover {
+    background-color: #009a27;
+}
+
+.eliminados-ver {
+    background-color: #ff5c5c;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    margin-left: 0 auto;
+    transition: background-color 0.3s;
+}
+
+.eliminados-ver:hover {
+    background-color: #d60000;
+}
+
+.mi-receta a, .boton-nuevo-medicamento, .boton-crear-receta {
+    margin-top: 10px;
+    text-align: center;
+}
+
+table thead th {
+    background-color: #009cde;
+    color: white;
+}
+
+table tbody tr:hover {
+    background-color: #e6f7ff;
+}
+
+.boton-recetas-pacientes {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #58a6ff;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 16px;
+    margin: 10px 5px;
+}
+
+.boton-recetas-pacientes:hover {
+    background-color: #006a9c;
+    transform: translateY(-2px);
+}

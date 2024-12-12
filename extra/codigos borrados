@@ -1,0 +1,468 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nuevo Medicamento</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="nuevo_med">
+        <h1>Agregar Nuevo Medicamento</h1>
+        <form action="proceso_agregar_medicamento.php" method="post">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre"><br><br>
+
+            <label for="uso">Uso:</label>
+            <input type="text" id="uso" name="uso"><br><br>
+
+            <label for="similar_a">Similar a:</label>
+            <input type="text" id="similar_a" name="similar_a"><br><br>
+
+            <input type="submit" value="Agregar Medicamento">
+        </form>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php
+// Conexión a la base de datos
+require_once('../setup.php');
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Función para validar RUT con dígito verificador
+function validarRut($rut) {
+    $rut = preg_replace('/[^k0-9]/i', '', $rut); // Elimina caracteres no permitidos y convierte a mayúscula si hay una 'k'
+
+    if (strlen($rut) < 3) {
+        return false;
+    }
+
+    $rut_numerico = substr($rut, 0, -1); // Obtén los números del RUT
+    $dv = substr($rut, -1); // Obtén el dígito verificador
+    $factor = 2;
+    $suma = 0;
+
+    for ($i = strlen($rut_numerico) - 1; $i >= 0; $i--) {
+        $suma += $rut_numerico[$i] * $factor;
+        $factor = $factor == 7 ? 2 : $factor + 1;
+    }
+
+    $dv_esperado = 11 - ($suma % 11);
+    $dv = ($dv == 'k') ? 10 : intval($dv);
+
+    return $dv_esperado == $dv;
+}
+
+// Obtener los datos del formulario, incluyendo el rol
+$nombre = $_POST['nombre'];
+$apellido = $_POST['apellido'];
+$usuario = $_POST['usuario']; // Aquí se ingresa el RUT
+$clave = password_hash($_POST['clave'], PASSWORD_DEFAULT);
+$rol = $_POST['rol'];
+
+// Validar el RUT antes de insertarlo en la base de datos
+if (!validarRut($usuario)) {
+    echo "El RUT ingresado no es válido";
+    exit(); // Detener el proceso si el RUT no es válido
+}
+
+// Insertar datos en la base de datos
+$sql = "INSERT INTO usuarios (nombre, apellido, usuario, clave, rol) VALUES ('$nombre', '$apellido', '$usuario', '$clave', '$rol')";
+
+if ($conn->query($sql) === TRUE) {
+    echo "Usuario registrado exitosamente<br>";
+
+    // Verificar el rol para redirigir a páginas específicas
+    if ($rol === 'medico') {
+        // Redirigir a la página donde el médico puede editar
+        echo '<a href="login.php">Iniciar sesión</a>';
+    } else {
+        // Redirigir a la página donde el paciente puede ver la tabla de medicamentos
+        echo '<a href="tabla_medicamentos.php">Ver tabla de medicamentos</a>';
+    }
+
+} else {
+    echo "Error al registrar el usuario: " . $conn->error;
+}
+
+$conn->close();
+?>
+
+
+
+
+
+
+
+
+
+
+
+------------------------------
+
+
+
+
+
+
+<?php
+// Conexión a la base de datos
+require_once('../setup.php');
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Obtener los datos del formulario
+// Obtener los datos del formulario, incluyendo el rol
+$nombre = $_POST['nombre'];
+$apellido = $_POST['apellido'];
+$usuario = $_POST['usuario'];
+$clave = password_hash($_POST['clave'], PASSWORD_DEFAULT);
+$rol = $_POST['rol'];
+
+// Insertar datos en la base de datos
+$sql = "INSERT INTO usuarios (nombre, apellido, usuario, clave, rol) VALUES ('$nombre', '$apellido', '$usuario', '$clave', '$rol')";
+
+if ($conn->query($sql) === TRUE) {
+    echo "Usuario registrado exitosamente<br>";
+
+    // Verificar el rol para redirigir a páginas específicas
+    if ($rol === 'medico') {
+        // Redirigir a la página donde el médico puede editar
+        echo '<a href="login.php">Iniciar sesion</a>';
+    } else {
+        // Redirigir a la página donde el paciente puede ver la tabla de medicamentos
+        echo '<a href="tabla_medicamentos.php">Ver tabla de medicamentos</a>';
+    }
+
+} else {
+    echo "Error al registrar el usuario: " . $conn->error;
+}
+
+$conn->close();
+?>
+
+
+------------------------------
+
+
+
+<?php
+require_once('../setup.php');
+
+session_start();
+
+$usuario = $_POST['usuario'];
+$clave = $_POST['clave'];
+
+$sql = "SELECT id, nombre, clave FROM usuarios WHERE usuario='$usuario'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    if (password_verify($clave, $row['clave'])) {
+        $_SESSION['id'] = $row['id'];
+        $_SESSION['nombre'] = $row['nombre'];
+        header('Location: ../index.php');
+        exit();
+    } else {
+        echo "Contraseña incorrecta";
+    }
+} else {
+    echo "Usuario no encontrado";
+}
+
+
+$conn->close();
+?>
+
+--------------------------------------
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mis Recetas</title>
+    <link rel="stylesheet" href="style_receta.css">
+</head>
+<body>
+    <header class="encabezado">
+        <h1 class="titulo">Mis Recetas 
+            <a href="../prueba_log/logout.php" class="cerrar_sesion">Cerrar Sesión</a>
+        </h1>
+    </header>
+
+    <div class="container">
+        <h2>Recetas entregadas:</h2>
+        <ul class="recetas-lista">
+            <li>Receta 1</li>
+            <li>Receta 2</li>
+            <li>Receta 3</li>
+        </ul>
+    </div>
+</body>
+</html>
+
+<?php
+// Tu código de conexión a la base de datos
+require_once('../setup.php');
+
+// Verificar el rol del usuario antes de mostrar las recetas
+// Esto se debe hacer antes de mostrar cualquier contenido
+// ...
+
+// Consulta para obtener las recetas del usuario actual (asumiendo que tienes un ID de usuario almacenado en la sesión)
+$user_id = $_SESSION['id'];
+$sql = "SELECT medicamentos_ids FROM recetas WHERE user_id = $user_id";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    echo "<ul class='recetas-lista'>";
+    while ($row = $result->fetch_assoc()) {
+        $medicamentos_ids = explode(",", $row['medicamentos_ids']);
+        foreach ($medicamentos_ids as $id) {
+            // Realizar una consulta para obtener los detalles de cada medicamento con el ID actual
+            $sql_med = "SELECT * FROM lista_medicamentos WHERE ID = $id";
+            $result_med = $conn->query($sql_med);
+
+            if ($result_med->num_rows > 0) {
+                while ($row_med = $result_med->fetch_assoc()) {
+                    // Mostrar los detalles del medicamento
+                    echo "<li>ID: " . $row_med['id'] . ", Nombre: " . $row_med['nombre'] . ", Uso: " . $row_med['uso'] . ", Similar a: " . $row_med['similar_a'] . "</li>";
+                }
+            } else {
+                echo "<li>No se encontraron detalles para el medicamento con ID $id</li>";
+            }
+        }
+    }
+    echo "</ul>";
+} else {
+    echo "No se encontraron recetas para este usuario";
+}
+?>
+
+------------------------------
+
+crear recetas
+
+<form action="procesar_receta.php" method="POST">
+    <label for="usuario">Seleccionar Usuario:</label>
+    <select name="usuario" id="usuario">
+        <!-- Aquí se cargarían los usuarios desde la base de datos -->
+        <option value="1">Usuario 1</option>
+        <option value="2">Usuario 2</option>
+        <!-- ... -->
+    </select>
+
+    <label for="medicamentos[]">Seleccionar Medicamentos:</label>
+    <select name="medicamentos[]" id="medicamentos" multiple>
+        <!-- Aquí se cargarían los medicamentos desde la base de datos -->
+        <option value="1">Medicamento 1</option>
+        <option value="2">Medicamento 2</option>
+        <!-- ... -->
+    </select>
+
+    <input type="submit" value="Agregar Receta">
+</form>
+
+
+--------------------------------------
+<?php
+// Conexión a la base de datos (cambia estos valores por los tuyos)
+$servername = "localhost";
+$username = "tu_usuario";
+$password = "tu_contraseña";
+$dbname = "tu_basedatos";
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar la conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Obtener datos del formulario
+$id_usuario = $_POST['usuario'];
+$medicamentos = $_POST['medicamentos'];
+
+// Insertar los medicamentos para el usuario seleccionado en la tabla guardar_receta
+foreach ($medicamentos as $id_medicamento) {
+    $sql = "INSERT INTO guardar_receta (id_usuario, id_medicamento) VALUES ('$id_usuario', '$id_medicamento')";
+    if ($conn->query($sql) !== TRUE) {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+}
+
+// Cerrar la conexión
+$conn->close();
+
+// Redireccionar a alguna página después de insertar la receta
+header("Location: alguna_pagina.php");
+exit();
+?>
+
+
+--------------------------------------
+
+<?php
+require_once('../setup.php');
+
+$sql = "SELECT id, nombre FROM usuarios";
+$result = $conn->query($sql);
+
+$usuarios = array();
+if ($result->num_rows > 0) {
+    // Guardar los usuarios en un arreglo
+    while ($row = $result->fetch_assoc()) {
+        $usuarios[$row['id']] = $row['nombre'];
+    }
+}
+
+$sql = "SELECT * FROM lista_medicamentos WHERE estado = 'activo'";
+$result = $conn->query($sql);
+
+if ($result === false) {
+    die("Error en la consulta SQL: " . $conn->error);
+}
+
+$medicamentos = [];
+
+while ($row = $result->fetch_assoc()) {
+    $medicamentos[] = $row;
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear Receta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="encabezado">
+        <h1>Crear Receta</h1>
+    </header>
+    <main>
+        <form action="" method="post">
+            <label for="usuario">Seleccionar Usuario:</label>
+            <table class="tabla_estilo">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Uso</th>
+                        <th>Similar a</th>
+                        <th class="select">Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($medicamentos as $medicamento) : ?>
+                        <tr>
+                            <td><?php echo $medicamento['id']; ?></td>
+                            <td><?php echo $medicamento['nombre']; ?></td>
+                            <td><?php echo $medicamento['uso']; ?></td>
+                            <td><?php echo $medicamento['similar_a']; ?></td>
+                            <td class='centrar-checkbox'><input type='checkbox' name='medicamentos_seleccionados[]' value='<?php echo $medicamento['id']; ?>'></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <!-- Agregar un campo de selección de usuario -->
+
+
+            <input type="submit" value="Guardar Receta">
+        </form>
+        
+<!-- Formulario con la lista de usuarios -->
+<form action="procesar_receta.php" method="post">
+    <label for="usuario">Seleccionar Usuario:</label>
+    <select name="usuario" id="usuario">
+        <!-- Mostrar opciones de usuarios obtenidos de la base de datos -->
+        <?php foreach ($usuarios as $id => $nombre) { ?>
+            <option value="<?php echo $id; ?>"><?php echo $nombre; ?></option>
+        <?php } ?>
+    </select>
+    
+    <!-- Resto del formulario (checkboxes de medicamentos, etc.) -->
+    <!-- ... -->
+
+    <input type="submit" value="Agregar Receta">
+</form>
+
+<?php
+// Cerrar conexión
+$conn->close();
+?>
+    </main>
+</body>
+</html>
+--------------------------------------
+.edit-boton,
+.elim-boton {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.edit-boton {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.elim-boton {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.edit-boton:hover {
+    background-color: #0056b3;
+}
+
+.elim-boton:hover {
+    background-color: #a40010;
+}
+
+--------------------------------------
+(procesar_receta.php)
+<?php
+require_once("../setup.php");
+
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+$usuario = $_POST['usuario'];
+$medicamentos = $_POST['medicamentos'];
+
+foreach ($medicamentos as $medicamento_id) {
+    $sql = "INSERT INTO guardar_receta (usuario_id, medicamento_id) VALUES ('$usuario', '$medicamento_id')";
+    if ($conn->query($sql) !== TRUE) {
+        echo "Error al agregar receta: " . $conn->error;
+    }
+}
+
+$conn->close();
+echo "Receta agregada exitosamente.";
+?>
