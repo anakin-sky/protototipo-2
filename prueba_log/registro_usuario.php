@@ -36,11 +36,36 @@
             document.getElementById('usuario').value = rut + '-' + dv;
         }
 
+        function verificarCoincidenciaClave() {
+            const clave = document.getElementById('clave').value;
+            const confirmarClave = document.getElementById('confirmar_clave').value;
+            const mensajeClaveCoincide = document.getElementById('mensaje-clave-coincide');
+            const confirmarClaveInput = document.getElementById('confirmar_clave');
+
+            if (clave && confirmarClave && clave !== confirmarClave) {
+                mensajeClaveCoincide.textContent = "Las contraseñas no coinciden.";
+                mensajeClaveCoincide.style.color = "red";
+                confirmarClaveInput.style.borderColor = "red";
+            } else {
+                mensajeClaveCoincide.textContent = "";
+                confirmarClaveInput.style.borderColor = "";
+            }
+        }
+
         function validarFormulario(event) {
+            const clave = document.getElementById('clave').value;
+            const confirmarClave = document.getElementById('confirmar_clave').value;
+
+            if (clave !== confirmarClave) {
+                alert("Las contraseñas no coinciden. Por favor, corrige los campos.");
+                event.preventDefault();
+                return;
+            }
+
+            actualizarRUTCompleto();
+
             const claveInput = document.getElementById('clave');
             const mensajeClave = document.getElementById('descripcion-clave');
-            const clave = claveInput.value;
-
             const requisitos = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{12,}$/;
 
             if (!requisitos.test(clave)) {
@@ -51,19 +76,8 @@
                     mensajeClave.classList.remove("parpadeo");
                 }, 3000);
                 return;
-            } else {
-                mensajeClave.style.color = "gray";
-                mensajeClave.classList.remove("parpadeo");
             }
-
-            actualizarRUTCompleto();
         }
-
-        // Comunas por provincia
-        const comunasPorProvincia = {
-            "Provincia de Iquique": ["Iquique", "Alto Hospicio"],
-            "Provincia del Tamarugal": ["Huara", "Camiña", "Colchane", "Pica", "Pozo Almonte"]
-        };
 
         function actualizarComunas() {
             const provinciaSelect = document.getElementById("ciudad");
@@ -82,16 +96,11 @@
             }
         }
 
-        function ocultarMensajeRut() {
-            const mensajeRut = document.querySelector('.mensaje-validacion');
-            if (mensajeRut) {
-                setTimeout(() => {
-                    mensajeRut.style.display = 'none';
-                }, 10000);
-            }
-        }
-
-        window.onload = ocultarMensajeRut;
+        // Comunas por provincia
+        const comunasPorProvincia = {
+            "Provincia de Iquique": ["Iquique", "Alto Hospicio"],
+            "Provincia del Tamarugal": ["Huara", "Camiña", "Colchane", "Pica", "Pozo Almonte"]
+        };
     </script>
     <style>
         body {
@@ -188,6 +197,7 @@
     <h2>Registro de Usuario</h2>
     <form id="registroForm" action="controlador_registro.php" method="post" onsubmit="validarFormulario(event)">
         <div class="form-container">
+            <!-- Columna izquierda -->
             <div class="form-column">
                 <div class="user-box">
                     <label for="nombre">Nombre:</label>
@@ -208,17 +218,28 @@
                 </div>
                 <div class="user-box">
                     <label for="correo">Correo Electrónico:</label>
-                    <input type="email" id="correo" name="correo" required>
+                    <input type="email" id="correo" name="correo">
+                </div>
+                <div class="user-box">
+                    <label for="clave">Contraseña:</label>
+                    <input type="password" id="clave" name="clave" required>
+                    <p id="descripcion-clave" class="descripcion-campo">Debe contener al menos 12 caracteres, una letra mayúscula, una minúscula, un número y un carácter especial.</p>
+                </div>
+                <div class="user-box">
+                    <label for="confirmar_clave">Confirmar Contraseña:</label>
+                    <input type="password" id="confirmar_clave" name="confirmar_clave" oninput="verificarCoincidenciaClave()" required>
+                    <p id="mensaje-clave-coincide" class="mensaje-validacion"></p>
                 </div>
             </div>
+            <!-- Columna derecha -->
             <div class="form-column">
                 <div class="user-box">
                     <label for="direccion">Dirección:</label>
-                    <input type="text" id="direccion" name="direccion" placeholder="Ejemplo: Avenida Principal" required>
+                    <input type="text" id="direccion" name="direccion" required>
                 </div>
                 <div class="user-box">
                     <label for="numero">Número de Casa:</label>
-                    <input type="text" id="numero" name="numero" placeholder="Ejemplo: 123" pattern="\d+" title="Solo números." required>
+                    <input type="text" id="numero" name="numero" required>
                 </div>
                 <div class="user-box">
                     <label for="ciudad">Provincia:</label>
@@ -238,21 +259,15 @@
                     <label for="nacimiento">Fecha de Nacimiento:</label>
                     <input type="date" id="nacimiento" name="nacimiento" required>
                 </div>
-                <div class="user-box">
-                    <label for="clave">Contraseña:</label>
-                    <input type="password" id="clave" name="clave" required>
-                    <p id="descripcion-clave" class="descripcion-campo">Debe contener al menos 12 caracteres, una letra mayúscula, una minúscula, un número y un carácter especial.</p>
-                </div>
             </div>
         </div>
         <input type="submit" value="Registrarse">
-        <?php if (isset($_GET['error']) && $_GET['error'] === 'rut_existente'): ?>
-            <div class="mensaje-validacion">El RUT ingresado ya existe. Por favor, intente con otro.</div>
+        <?php if (isset($_GET['error']) && $_GET['error'] === 'clave_no_coincide'): ?>
+            <div class="mensaje-validacion">Las contraseñas no coinciden. Por favor, intente nuevamente.</div>
         <?php endif; ?>
         <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
             <div class="mensaje-exito">Usuario registrado correctamente. Por favor, <a href="login.php">inicie sesión</a>.</div>
         <?php endif; ?>
-        <p>¿Ya tienes una cuenta? <a href="login.php" id="iniciarSesion">Iniciar sesión</a></p>
         <input type="hidden" id="usuario" name="usuario">
     </form>
 </div>
